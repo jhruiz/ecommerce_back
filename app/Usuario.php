@@ -32,7 +32,8 @@ class Usuario extends Model
                               'usuarios.email', 'usuarios.estado_id', 'tipodocumentos.descripcion as tipo_documento',
                               'perfiles.id as perfile_id','perfiles.descripcion as perfil', 'estados.id as estado_id',
                               'estados.descripcion as estado', 'tipopersonas.descripcion as tipo_persona', 'regimenes.descripcion as regimen',
-                              'ciudades.descripcion as ciudad', 'ciudades.id as ciudad_id', 'ciudades.departamento_id as departamento')
+                              'ciudades.descripcion as ciudad', 'ciudades.id as ciudad_id', 'ciudades.departamento_id as departamento',
+                              'paises.id as pais')
                 ->leftjoin('perfiles_usuarios', 'perfiles_usuarios.usuario_id', '=', 'usuarios.id')       
                 ->leftjoin('perfiles', 'perfiles.id', '=', 'perfiles_usuarios.perfile_id')   
                 ->leftjoin('estados', 'estados.id', '=', 'usuarios.estado_id')      
@@ -40,6 +41,8 @@ class Usuario extends Model
                 ->leftjoin('tipopersonas', 'tipopersonas.id', '=', 'usuarios.tipopersona_id')
                 ->leftjoin('regimenes', 'regimenes.id', '=', 'usuarios.regimene_id')
                 ->leftjoin('ciudades', 'ciudades.id', '=', 'usuarios.ciudade_id')
+                ->leftjoin('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+                ->leftjoin('paises', 'paises.id', '=', 'departamentos.paise_id')
                 ->where('usuarios.id', $id) 
                 ->get();
     	return $data;      	

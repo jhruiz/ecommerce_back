@@ -12,15 +12,17 @@ class DepartamentosController extends Controller
     /**
      * Retorna la información de todos los departamentos registradas en la base de datos
      */
-    public function obtenerDepartamentos()
+    public function obtenerDepartamentos( Request $request )
     {
 
         $resp = array( 'estado' => false, 'data' => null, 'mensaje' => '' );
 
+        $paidId = $request['paisId'];
+
         try {
 
             // se obtienen los departamentos
-            $departamentos = Departamento::obtenerDepartamentosPorPais();
+            $departamentos = Departamento::obtenerDepartamentosPorPais($paidId);
             
             // valida si se econtraron registros
             if( !empty( $departamentos ) ) {

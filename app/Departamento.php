@@ -19,9 +19,9 @@ class Departamento extends Model
   /**
    * Se obtienen todos los departamentos registrados en la base de datos por pais
    */
-  public static function obtenerDepartamentosPorPais() {
+  public static function obtenerDepartamentosPorPais($paidId) {
     $data = Departamento::select()
-            ->where('paise_id', '42')
+            ->where('paise_id', $paidId)
             ->orderBy('descripcion', 'ASC')
             ->get();
     return $data;  
