@@ -47,8 +47,8 @@ class ClassAliasAutoloader
      *
      * @param  \Psy\Shell  $shell
      * @param  string  $classMapPath
-     * @param  array   $includedAliases
-     * @param  array   $excludedAliases
+     * @param  array  $includedAliases
+     * @param  array  $excludedAliases
      * @return static
      */
     public static function register(Shell $shell, $classMapPath, array $includedAliases = [], array $excludedAliases = [])
@@ -142,9 +142,9 @@ class ClassAliasAutoloader
             return false;
         }
 
-        if (! $this->includedAliases->filter(function ($alias) use ($class) {
+        if ($this->includedAliases->contains(function ($alias) use ($class) {
             return Str::startsWith($class, $alias);
-        })->isEmpty()) {
+        })) {
             return true;
         }
 
@@ -152,9 +152,9 @@ class ClassAliasAutoloader
             return false;
         }
 
-        if (! $this->excludedAliases->filter(function ($alias) use ($class) {
+        if ($this->excludedAliases->contains(function ($alias) use ($class) {
             return Str::startsWith($class, $alias);
-        })->isEmpty()) {
+        })) {
             return false;
         }
 
