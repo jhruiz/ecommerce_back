@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ClienteResource;
 use App\Models\Cliente;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,9 +24,12 @@ class ClientesController extends Controller
             if (empty($email) || empty($password)) {
                 return response()->json(['estado' => false, 'mensaje' => 'Debe ingresar usuario y contraseña'], 200);
             }
+            
+            // Obtiene la empresa obtenida y configurada por el tenant
+            $empresaId = Config::get('app.empresa_id');
 
             // 2. Buscar cliente
-            $cliente = Cliente::obtenerClientePorEmail($email);
+            $cliente = Cliente::obtenerClientePorEmail($email, $empresaId);
 
             // 3. Verificar existencia
             if (!$cliente) {
@@ -40,8 +44,8 @@ class ClientesController extends Controller
             // 5. Todo OK: Guardar sesión
             // Guardamos el objeto transformado por el Resource para tener consistencia
             $dataCliente = new ClienteResource($cliente);
-            $request->session()->put('user', $dataCliente);
 
+            $request->session()->put('user', $dataCliente);
             return response()->json([
                 'estado'  => true,
                 'data'    => $dataCliente,

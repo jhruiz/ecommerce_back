@@ -20,14 +20,14 @@ class Producto extends Model
     /**
      * Función unificada para obtener productos o buscarlos
      */
-    public static function obtenerInfoProductos($skip, $cantidad, $buscar = null) {
+    public static function obtenerInfoProductos($skip, $cantidad, $buscar = null, $empresaId) {
         $query = self::with([
                 'categoria',
                 'imagenes',
                 'cargueinventario.impuestos'
             ])
             ->where('mostrarencatalogo', 1)
-            ->where('empresa_id', 40);
+            ->where('empresa_id', $empresaId);
 
         // Si hay algo que buscar, aplicamos los filtros
         if ($buscar) {
@@ -47,8 +47,8 @@ class Producto extends Model
     /**
      * Contar total contemplando la búsqueda (necesario para el paginador)
      */
-    public static function contarTotalActivos($buscar = null) {
-        $query = self::where('mostrarencatalogo', 1)->where('empresa_id', 40);
+    public static function contarTotalActivos($buscar = null, $empresaId) {
+        $query = self::where('mostrarencatalogo', 1)->where('empresa_id', $empresaId);
 
             if ($buscar) {
                 $query->where(function($q) use ($buscar) {
@@ -66,12 +66,12 @@ class Producto extends Model
     /**
      * Obtener productos relacionados
      */
-    public static function obtenerSugeridos($productoActual, $cantidad = 4) {
+    public static function obtenerSugeridos($productoActual, $cantidad = 4, $empresaId) {
         return self::with(['imagenes', 'cargueinventario'])
             ->where('categoria_id', $productoActual->categoria_id) // Misma categoría
             ->where('id', '!=', $productoActual->id)            // Excluir el actual
             ->where('mostrarencatalogo', 1)
-            ->where('empresa_id', 40)
+            ->where('empresa_id', $empresaId)
             ->inRandomOrder()                                    // Aleatorio para que varíe
             ->take($cantidad)
             ->get();

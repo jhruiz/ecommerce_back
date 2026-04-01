@@ -6,7 +6,9 @@
     RewriteEngine On
     
     # 1. Forzar CORS de forma única y global
-    Header always set Access-Control-Allow-Origin "*"
+    SetEnvIf Origin "^http(s)?://(.+\.)?miggo\.com\.co$" CORS_ALLOW_ORIGIN=$0
+    Header always set Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
+    Header always set Access-Control-Allow-Credentials "true"
     Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With, Authorization, X-Tenant-Config, X-Empresa-ID, Accept, Origin"
     

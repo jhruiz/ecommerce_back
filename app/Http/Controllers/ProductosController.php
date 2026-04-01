@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
+use Illuminate\Support\Facades\Config;
 use App\Http\Resources\ProductoResource;
 use Illuminate\Http\Request;
 
@@ -19,10 +20,13 @@ class ProductosController extends Controller
 
         try {
             $skip = ($pagina * $cantidad) - $cantidad;
+            
+            // Obtiene la empresa obtenida y configurada por el tenant
+            $empresaId = Config::get('app.empresa_id');
 
             // Pasamos el parámetro $buscar a ambos métodos
-            $items = Producto::obtenerInfoProductos($skip, $cantidad, $buscar);
-            $total = Producto::contarTotalActivos($buscar);
+            $items = Producto::obtenerInfoProductos($skip, $cantidad, $buscar, $empresaId);
+            $total = Producto::contarTotalActivos($buscar, $empresaId);
 
             return response()->json([
                 'estado'   => true,
@@ -47,6 +51,8 @@ class ProductosController extends Controller
 
         try {
             if (!$id) throw new \Exception("Producto no proporcionado.");
+            
+            $prodsSugeridos = 8;
 
             // Traemos el producto con TODAS sus relaciones de una vez (Eager Loading)
             $producto = Producto::with([
@@ -71,7 +77,10 @@ class ProductosController extends Controller
             // Si se han vendido más de 50 unidades, lo bautizamos como Top Ventas
             $esTopVentas = ($totalVendido > 50);
 
-            $sugeridos = Producto::obtenerSugeridos($producto);
+            // Obtiene la empresa obtenida y configurada por el tenant
+            $empresaId = Config::get('app.empresa_id');
+            
+            $sugeridos = Producto::obtenerSugeridos($producto, $prodsSugeridos, $empresaId);
 
             return response()->json([
                 'estado' => true,

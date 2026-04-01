@@ -19,10 +19,10 @@ class Cliente extends Model
     /**
      * Busca un cliente activo por su email
      */
-    public static function obtenerClientePorEmail($email) {
+    public static function obtenerClientePorEmail($email, $empresaId) {
         return self::where('email', $email)
-                ->where('empresa_id', 40)
-                ->with('ciudad') // CARGA LA CIUDAD DE UNA VEZ
+                ->where('empresa_id', $empresaId)
+                ->with('ciudad') // CARGA LA CIUDAD
                 ->first();
     }
 }
