@@ -4,6 +4,15 @@
     </IfModule>
 
     RewriteEngine On
+    
+    # 1. Forzar CORS de forma única y global
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With, Authorization, X-Tenant-Config, X-Empresa-ID, Accept, Origin"
+    
+    # 2. Responder 200 OK a las peticiones OPTIONS y CORTAR la ejecución
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

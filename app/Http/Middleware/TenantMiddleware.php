@@ -11,8 +11,17 @@ class TenantMiddleware
 {
     public function handle($request, Closure $next)
     {
-        // 1. Extraer el subdominio (ej: 'torque' de torque.miggo.com.co)
-        $host = $request->getHost();
+        
+        $origin = $request->headers->get('origin');
+        
+        if (!$origin) {
+            return response()->json(['error' => 'Origen de petici¨®n no identificado'], 400);
+        }
+        
+        // 2. Limpiar el protocolo (https://)
+        $host = str_replace(['https://', 'http://'], '', $origin);
+        
+        // 3. Extraer el primer segmento (el identificador)
         $identifier = explode('.', $host)[0];
 
         // 2. Buscar el Tenant ÃšNICO en la DB Landlord
