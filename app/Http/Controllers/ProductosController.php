@@ -20,7 +20,7 @@ class ProductosController extends Controller
 
         try {
             $skip = ($pagina * $cantidad) - $cantidad;
-            
+
             // Obtiene la empresa obtenida y configurada por el tenant
             $empresaId = Config::get('app.empresa_id');
 
@@ -51,7 +51,7 @@ class ProductosController extends Controller
 
         try {
             if (!$id) throw new \Exception("Producto no proporcionado.");
-            
+
             $prodsSugeridos = 8;
 
             // Traemos el producto con TODAS sus relaciones de una vez (Eager Loading)
@@ -79,7 +79,7 @@ class ProductosController extends Controller
 
             // Obtiene la empresa obtenida y configurada por el tenant
             $empresaId = Config::get('app.empresa_id');
-            
+
             $sugeridos = Producto::obtenerSugeridos($producto, $prodsSugeridos, $empresaId);
 
             return response()->json([

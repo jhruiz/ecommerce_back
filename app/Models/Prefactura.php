@@ -43,4 +43,19 @@ class Prefactura extends Model
       return $data;
     }
 
+    public static function obtenerPedidosPorUsuario($userId) {
+        return Prefactura::select(
+                'prefacturas.id',
+                'prefacturas.numeropedido',
+                'prefacturas.fechaorden as fecha',
+                'estadopedidos.descripcion as estado_nombre',
+                'prefacturas.estadopedido_id'
+            )
+            ->join('estadopedidos', 'estadopedidos.id', '=', 'prefacturas.estadopedido_id')
+            ->where('prefacturas.cliente_id', '=', $userId)
+            ->where('prefacturas.eliminar', '=', 0)
+            ->orderBy('prefacturas.id', 'desc')
+            ->get();
+    }
+
 }

@@ -11,16 +11,16 @@ class TenantMiddleware
 {
     public function handle($request, Closure $next)
     {
-        
+
         $origin = $request->headers->get('origin');
-        
+
         if (!$origin) {
-            return response()->json(['error' => 'Origen de petici¨®n no identificado'], 400);
+            return response()->json(['error' => 'Origen de peticion no identificado'], 400);
         }
-        
+
         // 2. Limpiar el protocolo (https://)
         $host = str_replace(['https://', 'http://'], '', $origin);
-        
+
         // 3. Extraer el primer segmento (el identificador)
         $identifier = explode('.', $host)[0];
 

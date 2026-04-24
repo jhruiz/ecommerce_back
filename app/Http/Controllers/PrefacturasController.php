@@ -346,6 +346,65 @@ class PrefacturasController extends Controller
         ]);
     }
 
+    // 1. Obtener listado de prefacturas (pedidos) del cliente
+    public function obtenerPedidosCliente(Request $request) {
+        $userId = $request->input('userId');
+
+        $pedidos = Prefactura::obtenerPedidosPorUsuario($userId);
+
+        return response()->json(['estado' => true, 'data' => $pedidos]);
+    }
+
+
+    public function obtenerDetallePedido(Request $request) {
+        $prefacturaId = $request->input('pedidoId');
+
+        $cabecera = Prefactura::find($prefacturaId);
+        $detalles = Prefacturasdetalle::obtenerDetalleCompleto($prefacturaId);
+
+        $subtotal = 0;
+        $ivaTotal = 0;
+
+        foreach ($detalles as $item) {
+            $base = $item->cantidad * (float)$item->vlr_item;
+            $subtotal += $base;
+            $ivaTotal += ($base * ($item->vlr_impuesto / 100));
+        }
+
+        return response()->json([
+            'estado' => true,
+            'data' => $detalles,
+            'cabecera' => $cabecera,
+            'ttles' => [
+                '2' => $subtotal,
+                '3' => $ivaTotal,
+                '4' => $subtotal + $ivaTotal
+            ]
+        ]);
+    }
+
+    /**
+     * Obtiene el listado de estados para construir el Timeline
+     */
+    public function obtenerEstados() {
+        try {
+            // Usamos el modelo directamente con tu estilo de consulta
+            $estados = EstadoPedido::select('id', 'descripcion', 'orden', 'fontawesome')
+                ->orderBy('orden', 'asc')
+                ->get();
+
+            return response()->json([
+                'estado' => true,
+                'data' => $estados
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'estado' => false,
+                'mensaje' => 'Error al obtener estados: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 
 

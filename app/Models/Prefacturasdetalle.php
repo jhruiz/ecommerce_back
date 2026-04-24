@@ -21,4 +21,17 @@ class Prefacturasdetalle extends Model {
     {
         return $this->belongsTo(Cargueinventario::class, 'cargueinventario_id');
     }
+
+    public static function obtenerDetalleCompleto($prefacturaId) {
+        return Prefacturasdetalle::select(
+                'productos.descripcion as desc_item',
+                'prefacturasdetalles.cantidad',
+                'prefacturasdetalles.costoventa as vlr_item',
+                'prefacturasdetalles.impuesto as vlr_impuesto'
+            )
+            ->join('cargueinventarios', 'prefacturasdetalles.cargueinventario_id', '=', 'cargueinventarios.id')
+            ->join('productos', 'cargueinventarios.producto_id', '=', 'productos.id')
+            ->where('prefacturasdetalles.prefactura_id', '=', $prefacturaId)
+            ->get();
+    }
 }
