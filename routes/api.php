@@ -14,6 +14,7 @@ Route::middleware(['tenant'])->group(function () {
 
     // Rutas de Cliente
     Route::post('cliente/login', 'App\Http\Controllers\ClientesController@loginCliente');
+    Route::post('cliente/logout', 'App\Http\Controllers\ClientesController@logout');
     Route::get('cliente/perfilcliente', 'App\Http\Controllers\ClientesController@perfil');
     Route::post('cliente/actualizarperfil', 'App\Http\Controllers\ClientesController@actualizarDatos');
     Route::post('cliente/crearactualizar', 'App\Http\Controllers\ClientesController@crearUsuario');

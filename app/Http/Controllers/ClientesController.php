@@ -60,6 +60,27 @@ class ClientesController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        try {
+            // Eliminamos los datos del usuario de la sesión
+            $request->session()->forget('user');
+
+            // Opcional: destruir toda la sesión
+            // $request->session()->flush();
+
+            return response()->json([
+                'estado' => true,
+                'mensaje' => 'Sesión cerrada correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'estado' => false,
+                'mensaje' => 'Error al cerrar sesión'
+            ], 500);
+        }
+    }
+
     /**
      * Obtiene el perfil del cliente logueado para el Checkout
      */

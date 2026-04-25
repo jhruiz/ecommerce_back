@@ -13,6 +13,7 @@ class TenantMiddleware
     {
 
         $origin = $request->headers->get('origin');
+        //$origin = 'localhost';
 
         if (!$origin) {
             return response()->json(['error' => 'Origen de peticion no identificado'], 400);

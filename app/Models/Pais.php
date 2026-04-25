@@ -9,7 +9,7 @@ class Pais extends Model
     // Laravel por defecto busca "pais", así que forzamos el nombre de tu tabla
     protected $table = 'paisesmiggos';
 
-    protected $fillable = ['nombre', 'codigo'];
+    protected $fillable = ['descripcion', 'codigo'];
 
     // Relación: Un país tiene muchos departamentos
     public function departamentos()

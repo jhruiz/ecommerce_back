@@ -47,7 +47,7 @@ class Prefactura extends Model
         return Prefactura::select(
                 'prefacturas.id',
                 'prefacturas.numeropedido',
-                'prefacturas.fechaorden as fecha',
+                'prefacturas.created as fecha',
                 'estadopedidos.descripcion as estado_nombre',
                 'prefacturas.estadopedido_id'
             )
