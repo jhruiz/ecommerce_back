@@ -405,6 +405,31 @@ class PrefacturasController extends Controller
         }
     }
 
+    public function webhookWompi(Request $request) {
+        $data = $request->input('data.transaction');
+
+        // 1. Extraer datos
+        $referencia = $data['reference']; // Tu order_id: 17232139020447
+        $idWompi = $data['id'];           // El ID largo de Wompi
+        $estadoWompi = $data['status'];   // APPROVED, DECLINED, VOIDED
+
+        // 2. Buscar la prefactura en tu base de datos
+        $pedido = Prefactura::where('numeropedido', $referencia)->first();
+
+        if ($pedido) {
+            if ($estadoWompi == 'APPROVED') {
+                $pedido->estadopedido_id = 5; // ID de "Pagado" o "Preparando"
+                // Guardamos el ID de Wompi en un campo de observación o uno nuevo
+                $pedido->observacion = "Pago Wompi ID: " . $idWompi;
+            } else {
+                $pedido->estadopedido_id = 7; // ID de "Rechazado"
+            }
+            $pedido->save();
+        }
+
+        return response()->json(['status' => 'ok'], 200);
+    }
+
 
 
 

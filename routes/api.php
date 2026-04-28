@@ -18,6 +18,7 @@ Route::middleware(['tenant'])->group(function () {
     Route::get('cliente/perfilcliente', 'App\Http\Controllers\ClientesController@perfil');
     Route::post('cliente/actualizarperfil', 'App\Http\Controllers\ClientesController@actualizarDatos');
     Route::post('cliente/crearactualizar', 'App\Http\Controllers\ClientesController@crearUsuario');
+    Route::post('cliente/actualizar-datos-envio', 'App\Http\Controllers\ClientesController@actualizarDatosEnvio');
 
     // Rutas de Productos y Categorías
     Route::get('productos/obtener', 'App\Http\Controllers\ProductosController@obtenerInfoProductos');
@@ -41,6 +42,7 @@ Route::middleware(['tenant'])->group(function () {
     Route::get('departamentos/obtener', 'App\Http\Controllers\DepartamentoController@obtenerDepartamentos');
     Route::get('ciudades/obtener', 'App\Http\Controllers\CiudadController@obtenerCiudades');
 
+    Route::post('pago/webhook', 'App\Http\Controllers\PrefacturasController@webhookWompi');
 });
 
 // Esta ruta es la de por defecto de Laravel, puedes dejarla fuera o dentro según necesites

@@ -202,5 +202,21 @@ class ClientesController extends Controller
         }
     }
 
+    public function actualizarDatosEnvio(Request $request) {
+        $userId = $request->input('userId');
+
+        $cliente = Cliente::find($userId);
+        if($cliente) {
+            $cliente->ciudadesmiggo_id = $request->input('ciudad');
+            $cliente->direccion = $request->input('direccion');
+            $cliente->celular   = $request->input('celular');
+            $cliente->save();
+
+            return response()->json(['estado' => true, 'mensaje' => 'Dirección actualizada']);
+        }
+
+        return response()->json(['estado' => false, 'mensaje' => 'Cliente no encontrado']);
+    }
+
 
 }
