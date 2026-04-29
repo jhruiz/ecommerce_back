@@ -406,27 +406,38 @@ class PrefacturasController extends Controller
     }
 
     public function webhookWompi(Request $request) {
-        $data = $request->input('data.transaction');
+        Log::info($request->all());
+        // IMPORTANTE: Wompi envía una estructura donde 'event' dice qué pasó
+        $evento = $request->input('event');
 
-        // 1. Extraer datos
-        $referencia = $data['reference']; // Tu order_id: 17232139020447
-        $idWompi = $data['id'];           // El ID largo de Wompi
-        $estadoWompi = $data['status'];   // APPROVED, DECLINED, VOIDED
+        // Solo procesamos si el evento es una transacción terminada
+        if ($evento == 'transaction.updated') {
+            $data = $request->input('data.transaction');
 
-        // 2. Buscar la prefactura en tu base de datos
-        $pedido = Prefactura::where('numeropedido', $referencia)->first();
+            $referencia = $data['reference'];
+            $idWompi = $data['id'];
+            $estadoWompi = $data['status'];
 
-        if ($pedido) {
-            if ($estadoWompi == 'APPROVED') {
-                $pedido->estadopedido_id = 5; // ID de "Pagado" o "Preparando"
-                // Guardamos el ID de Wompi en un campo de observación o uno nuevo
-                $pedido->observacion = "Pago Wompi ID: " . $idWompi;
-            } else {
-                $pedido->estadopedido_id = 7; // ID de "Rechazado"
+            // Buscamos el pedido
+            $pedido = Prefactura::where('numeropedido', $referencia)->first();
+
+            if ($pedido) {
+                // Verificamos el estado que viene de Wompi
+                if ($estadoWompi == 'APPROVED') {
+                    // AQUÍ: Usa el ID que corresponda a "PAGADO" en tu tabla estadopedidos
+                    $pedido->estadopedido_id = 5;
+                    $pedido->observacion = "Pago Aprobado Wompi ID: " . $idWompi;
+                } else if (in_array($estadoWompi, ['DECLINED', 'VOIDED', 'ERROR'])) {
+                    // AQUÍ: Usa el ID que corresponda a "RECHAZADO"
+                    $pedido->estadopedido_id = 7;
+                    $pedido->observacion = "Pago fallido/rechazado Wompi ID: " . $idWompi . " Estado: " . $estadoWompi;
+                }
+
+                $pedido->save();
             }
-            $pedido->save();
         }
 
+        // Siempre responder 200 a Wompi para que no siga reintentando el envío
         return response()->json(['status' => 'ok'], 200);
     }
 
