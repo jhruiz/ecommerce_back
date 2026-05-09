@@ -6,6 +6,7 @@ use App\Models\Prefactura;
 use App\Models\Prefacturasdetalle;
 use App\Models\Estadopedido;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\PrefacturaItemResource;
 use App\Mail\Pedidos;
 use Illuminate\Support\Facades\Mail;
