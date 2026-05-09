@@ -53,7 +53,7 @@ class Prefactura extends Model
             )
             ->join('estadopedidos', 'estadopedidos.id', '=', 'prefacturas.estadopedido_id')
             ->where('prefacturas.cliente_id', '=', $userId)
-            ->where('prefacturas.eliminar', '=', 0)
+            ->where('estadopedidos.mostrar', '=', 1)
             ->orderBy('prefacturas.id', 'desc')
             ->get();
     }

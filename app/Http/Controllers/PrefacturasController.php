@@ -390,6 +390,7 @@ class PrefacturasController extends Controller
         try {
             // Usamos el modelo directamente con tu estilo de consulta
             $estados = EstadoPedido::select('id', 'descripcion', 'orden', 'fontawesome')
+                ->where('mostrar', 1)
                 ->orderBy('orden', 'asc')
                 ->get();
 

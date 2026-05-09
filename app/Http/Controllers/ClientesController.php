@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ClienteResource;
 use App\Models\Cliente;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -152,6 +153,8 @@ class ClientesController extends Controller
                             ->where('empresa_id', $empresaId)
                             ->first();
 
+            $usuarioId = Usuario::obtenerUsuario($empresaId)->id;
+
             // Preparar la data (Limpiamos y organizamos)
             $data = [
                 'nombre'           => $request->nombres . ' ' . $request->apellidos,
@@ -163,7 +166,7 @@ class ClientesController extends Controller
                 'ciudade_id'       => 0, // Valor por defecto si no lo usas
                 'empresa_id'       => $empresaId,
                 'estado_id'        => 1, // Activo
-                'usuario_id'       => 1, // Usuario que lo crea (puedes dejarlo en 1)
+                'usuario_id'       => $usuarioId, // Usuario que lo crea (puedes dejarlo en 1)
                 'tipoidentificacione_id' => 3, // Cédula por defecto
             ];
 
@@ -185,7 +188,7 @@ class ClientesController extends Controller
             }
 
             // 3. Loguear automáticamente al usuario
-            // $dataCliente = new ClienteResource($cliente);
+            $dataCliente = new ClienteResource($cliente);
             // $request->session()->put('user', $dataCliente);
 
             return response()->json([
