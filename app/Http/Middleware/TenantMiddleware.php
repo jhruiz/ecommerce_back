@@ -67,6 +67,9 @@ class TenantMiddleware
         Config::set('wompi.pub_key', $tenant->pub_key);
         Config::set('wompi.integrity_key', $tenant->integiry_key);
 
+        // 6. Cargamos información de monto mínimo
+        Config::set('wompi.minamount', $tenant->minamount);
+
         return $next($request);
     }
 

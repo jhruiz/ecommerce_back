@@ -29,6 +29,12 @@ class ClientesController extends Controller
             // Obtiene la empresa obtenida y configurada por el tenant
             $empresaId = Config::get('app.empresa_id');
 
+            // Obtiene el monto mínimo
+            $minAmount = Config::get('wompi.minamount');
+
+            // Genera bandera para pagos por pasarela de pagos
+            $payGateway = Config::get('wompi.pub_key') != null ? true : false;
+
             // 2. Buscar cliente
             $cliente = Cliente::obtenerClientePorEmail($email, $empresaId);
 
@@ -50,6 +56,8 @@ class ClientesController extends Controller
             return response()->json([
                 'estado'  => true,
                 'data'    => $dataCliente,
+                'minamount'    => $minAmount,
+                'paygate'    => $payGateway,
                 'mensaje' => '¡Bienvenido, ' . $cliente->nombre . '!'
             ], 200);
 
