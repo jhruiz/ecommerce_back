@@ -13,3 +13,5 @@ yarn-error.log
 .env
 node_modules/
 .htaccess
+error_log
+*.log

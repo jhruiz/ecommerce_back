@@ -4,28 +4,38 @@
     </IfModule>
 
     RewriteEngine On
+
+    # --- INICIO BLOQUE DE FUERZA BRUTA PARA CORS ---
+    <IfModule mod_headers.c>
+        # 1. Borramos cualquier rastro del asterisco o headers previos
+        Header always unset Access-Control-Allow-Origin
+        Header always unset Access-Control-Allow-Credentials
     
-    # 1. Forzar CORS de forma 煤nica y global
-    SetEnvIf Origin "^http(s)?://(.+\.)?miggo\.com\.co$" CORS_ALLOW_ORIGIN=$0
-    Header always set Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
-    Header always set Access-Control-Allow-Credentials "true"
-    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-    Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With, Authorization, X-Tenant-Config, X-Empresa-ID, Accept, Origin"
+        # 2. CAPTURA DINÁMICA: Si el origen termina en .miggoshop.com, lo guardamos en una variable
+        SetEnvIf Origin "^https?://(?<subdomain>.+\.)?miggoshop\.com$" CORS_ALLOW_ORIGIN=$0
     
-    # 2. Responder 200 OK a las peticiones OPTIONS y CORTAR la ejecuci贸n
+        # 3. Seteamos el Origin usando esa variable dinámica
+        Header always set Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
+        
+        # 4. El resto de headers se mantienen igual
+        Header always set Access-Control-Allow-Credentials "true"
+        Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin, X-Tenant-Config"
+    </IfModule>
+
+    # 3. Respuesta rápida a peticiones preflight (OPTIONS)
     RewriteCond %{REQUEST_METHOD} OPTIONS
     RewriteRule ^(.*)$ $1 [R=200,L]
+    # --- FIN BLOQUE CORS ---
 
-    # Handle Authorization Header
+    # Reglas estándar de Laravel
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
