@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://pruebaecommerce.miggo.com.co'],
+    'allowed_origins' => ['https://*.miggo.com.co', 'https://*.miggoshop.com',],
 
     'allowed_origins_patterns' => [],
 
