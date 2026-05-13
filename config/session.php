@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => '.miggo.com.co',
+    'domain' => '.miggoshop.com',
     //'domain' => env('SESSION_DOMAIN', null),
 
     /*

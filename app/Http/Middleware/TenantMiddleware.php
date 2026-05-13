@@ -21,7 +21,6 @@ class TenantMiddleware
             $redirectUrl = $payload['data']['transaction']['redirect_url'] ?? null;
             
             if ($redirectUrl) {
-                // Extraemos el host de la URL (ej: pruebaecommerce.miggo.com.co)
                 $origin = parse_url($redirectUrl, PHP_URL_HOST);
             }
         }
