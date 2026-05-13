@@ -19,9 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://dayilu.miggoshop.com'],
+    'allowed_origins' => [],
 
-    'allowed_origins_patterns' => ['#^https://.*\.miggoshop\.com$#'],
+    'allowed_origins_patterns' => ['#^https?://.*\.miggoshop\.com$#'],
 
     'allowed_headers' => ['*'],
 
