@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [],
+    'allowed_origins' => ['https://dayilu.miggoshop.com'],
 
     'allowed_origins_patterns' => ['#^https?://.*\.miggoshop\.com$#'],
 
