@@ -27,6 +27,7 @@ class Producto extends Model
                 'cargueinventario.impuestos'
             ])
             ->where('mostrarencatalogo', 1)
+            ->where('estado', 1)
             ->where('empresa_id', $empresaId);
 
         // Si hay algo que buscar, aplicamos los filtros
